@@ -1,6 +1,6 @@
 import pytest
 
-from simple_find import match
+from simple_find import match, find_all_patterns
 
 
 @pytest.mark.parametrize("text, expected", [
@@ -29,6 +29,28 @@ from simple_find import match
     ("+ab-a+", -1),
     ("+ba-b+", -1),
     ("+ab-ba+", 7),
+    ("sjknvsdv", -1),  # случайный текст
 ])
 def test_match(text, expected):
     assert match(text) == expected
+
+
+@pytest.mark.parametrize("text, expected_patterns", [
+    ("", []),
+    ("a", []),
+    ("b", []),
+    ("+", []),
+    ("-", []),
+    ("ab", []),
+    ("ba", []),
+    ("++", ["++"]),
+    ("+a+a+", ["+a+", "+a+"]),
+    ("+b+b+", ["+b+", "+b+"]),
+    ("+++", ["++", "++"]),
+    ("++a++", ["++", "+a+", "++"]),
+    ("+ab-ba++ba+", ["+ab-ba+", "++", "+ba+"]),
+    ("+ab-b+++aba+bab++", ["+ab-b+", "++", "++", "+aba+", "+bab+", "++"]),
+])
+def test_find_all_patterns(text, expected_patterns):
+    result_patterns = list(text[begin:end] for begin, end in find_all_patterns(text))
+    assert result_patterns == expected_patterns
