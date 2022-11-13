@@ -1,6 +1,17 @@
+import re
+
 import pytest
+from hypothesis import given
+from hypothesis.strategies import from_regex
 
 from simple_find import match, find_all_patterns
+
+re_matcher = re.compile(r"^\+(|(b(-b)*))((a(-a)*)(b(-b)*))*(|(a(-a)*))\+$")
+
+
+@given(from_regex(re_matcher, fullmatch=True))
+def test_match_with_equivalent_regex(text):
+    assert match(text) == len(text)
 
 
 @pytest.mark.parametrize("text, expected", [
