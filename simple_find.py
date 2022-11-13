@@ -41,9 +41,13 @@ def find_all_patterns(text: str) -> Iterator[tuple[int, int]]:
 
 def main():
     text = input()
+    no_patterns = True
     for begin, end in find_all_patterns(text):
         output = "{}: {}".format(begin + 1, text[begin:end])
         print(output)
+        no_patterns = False
+    if no_patterns:
+        print("Цепочек не найдено")
 
 
 if __name__ == '__main__':
